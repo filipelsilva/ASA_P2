@@ -1,6 +1,5 @@
 #include <cstdio>
 #include <vector>
-#include <stack>
 
 using namespace std;
 
@@ -18,20 +17,20 @@ class Process {
 };
 
 Process parseData() {
-	int n, k;
+	int z, n, k;
 	scanf("%d %d", &n, &k);
 
 	Process ret = Process(n);
 
 	int px, py;
-	for (int i = 0; i < n; i++) {
+	for (z = 0; z < n; z++) {
 		scanf("%d %d", &px, &py);
 		ret.cpuX.push_back(px);
 		ret.cpuY.push_back(py);
 	}
 
 	int i, j, c;
-	for (int z = 0; z < k; z++) {
+	for (z = 0; z < k; z++) {
 		scanf("%d %d %d", &i, &j, &c);
 		ret.commsCost[i-1][j-1] = c;
 		ret.commsCost[j-1][i-1] = c;
@@ -42,12 +41,5 @@ Process parseData() {
 
 int main(int argc, char *argv[]) {
 	Process process = parseData();
-
-	//for (int i = 0; i < globalN; i++) {
-	//	for (int j = 0; j < globalN; j++) {
-	//		printf("%d\t", process.commsCost[i][j]);
-	//	}
-	//	printf("\n");
-	//}
 	return 0;
 }
