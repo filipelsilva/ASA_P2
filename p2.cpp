@@ -6,12 +6,14 @@ using namespace std;
 class Process {
 	public:
 		int numProcesses = -1;
-		vector<int> cpuX = vector<int>();
-		vector<int> cpuY = vector<int>();
+		vector<int> cpuX;
+		vector<int> cpuY;
 		vector<vector<int>> commsCost;
 
 		Process(int nP) {
 			this->numProcesses = nP;
+			cpuX = vector<int>(nP, 0);
+			cpuY = vector<int>(nP, 0);
 			commsCost = vector<vector<int>>(nP, vector<int>(nP, 0));
 		}
 };
