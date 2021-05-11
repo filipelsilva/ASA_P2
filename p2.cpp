@@ -12,7 +12,7 @@ class Process {
 
 		Process(int nP) {
 			this->numProcesses = nP;
-			commsCost = vector<vector<int>>(nP, vector<int>(nP));
+			commsCost = vector<vector<int>>(nP, vector<int>(nP, 0));
 		}
 };
 
