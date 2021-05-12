@@ -6,14 +6,16 @@ using namespace std;
 class Process {
 	public:
 		int numProcesses = -1;
+		vector<int> costsX;
+		vector<int> costsY;
+		vector<vector<int>> commsCost;
 		vector<int> cpuX;
 		vector<int> cpuY;
-		vector<vector<int>> commsCost;
 
 		Process(int nP) {
 			this->numProcesses = nP;
-			this->cpuX = vector<int>(nP, 0);
-			this->cpuY = vector<int>(nP, 0);
+			this->costsX = vector<int>(nP, 0);
+			this->costsY = vector<int>(nP, 0);
 			this->commsCost = vector<vector<int>>(nP, vector<int>(nP, 0));
 		}
 };
@@ -27,8 +29,8 @@ Process parseData() {
 	int px, py;
 	for (z = 0; z < n; z++) {
 		scanf("%d %d", &px, &py);
-		ret.cpuX.push_back(px);
-		ret.cpuY.push_back(py);
+		ret.costsX.push_back(px);
+		ret.costsY.push_back(py);
 	}
 
 	int i, j, c;
