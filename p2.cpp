@@ -12,9 +12,9 @@ class Process {
 
 		Process(int nP) {
 			this->numProcesses = nP;
-			cpuX = vector<int>(nP, 0);
-			cpuY = vector<int>(nP, 0);
-			commsCost = vector<vector<int>>(nP, vector<int>(nP, 0));
+			this->cpuX = vector<int>(nP, 0);
+			this->cpuY = vector<int>(nP, 0);
+			this->commsCost = vector<vector<int>>(nP, vector<int>(nP, 0));
 		}
 };
 
