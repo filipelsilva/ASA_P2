@@ -7,5 +7,5 @@ all: p2.cpp gen2procs.cpp
 clean: p2.out gen2procs.out
 	rm *.out
 
-test: p2.out
+test: all
 	./p2.out < test.txt
