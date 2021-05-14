@@ -25,7 +25,9 @@ class Graph {
 		vector<int> costsX;
 		vector<int> costsY;
 		vector<vector<int>> commsCost;
-		vector<vector<int>> capacity;
+		vector<int> fluxX;
+		vector<int> fluxY;
+		vector<vector<int>> flux;
 
 		Graph(int nP) {
 			this->numProcesses = nP;
@@ -33,15 +35,17 @@ class Graph {
 			this->costsX = vector<int>(nP, 0);
 			this->costsY = vector<int>(nP, 0);
 			this->commsCost = vector<vector<int>>(nP, vector<int>(nP, 0));
-			this->capacity = vector<vector<int>>(nP, vector<int>(nP, 0));
+			this->fluxX = vector<int>(nP, 0);
+			this->fluxY = vector<int>(nP, 0);
+			this->flux = vector<vector<int>>(nP, vector<int>(nP, 0));
 		}
 
-		int cost(int id1, int id2);
+		int capacity(int id1, int id2);
 		void DFS_Visit(Node* n);
 		void clean();
 };
 
-int Graph::cost(int id1, int id2) {
+int Graph::capacity(int id1, int id2) {
 	if (id1 == -1) /* -1 is the X node */
 		return costsX[id2];
 	else if (id2 == -1)
