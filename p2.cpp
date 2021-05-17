@@ -4,7 +4,7 @@
 
 using namespace std;
 
-enum colors { WHITE, GREY, BLACK };
+enum colors { WHITE, GREY, BLACK, RED };
 
 class Process {
 	public:
@@ -34,13 +34,14 @@ class Program {
 			this->sink = nP + 1;
 			this->processes = vector<Process*>(nP + 2);
 			this->weights = vector<vector<int>>(nP + 2, vector<int>(nP, 0));
-			this->flux = vector<vector<int>>(nP + 2, vector<int>(nP, 0));
 			this->residual = vector<vector<int>>(nP + 2, vector<int>(nP, 0));
 		}
 
 		int getWeights(int id1, int id2);
-		void DFS_Visit(Process* n);
-		void fordFulkerson();
+		int getResidual(int id1, int id2);
+		void DFS();
+		int maxFlux(vector<Process*> path);
+		int fordFulkerson();
 		void clean();
 };
 
@@ -48,25 +49,64 @@ int Program::getWeights(int id1, int id2) {
 	return weights[id1][id2];
 }
 
-int Program::getFlux(int id1, int id2) {
-	return flux[id1][id2];
+int Program::getResidual(int id1, int id2) {
+	return residual[id1][id2];
 }
 
-void Program::DFS_Visit(Process* n) {
+void Program::DFS() {
 	stack<Process*> toVisit;
-	toVisit.push(n);
+	toVisit.push(this->processes[this->source]);
+
+	for (Process* p : this->processes)
+		p->color = WHITE;
 
 	while (!toVisit.empty()) {
 		Process* node = toVisit.top();
 		node->color = GREY;
 
-		for (Process* next : node->neighbours)
-			if (next->color == WHITE)
+		//printf("Vizinhos de %d\n", node->id);
+		for (Process* next : node->neighbours) {
+			//printf("\t%d\n", next->id);
+			if (next->color == WHITE) {
 				toVisit.push(next);
+				next->color = RED;
+			}
+		}
 
 		if (toVisit.top() == node) {
 			node->color = BLACK;
+			printf("%d\n", node->id);
 			toVisit.pop();
+		}
+	}
+}
+
+int Program::maxFlux(vector<Process*> path) {
+	int flux = getResidual(path[1]->id, path[0]->id);
+	int tmp = 0;
+
+	for (int i = 2; i < path.size(); i++) {
+		tmp = getResidual(path[i]->id, path[i-1]->id);
+
+		if (tmp < flux)
+			flux = tmp;
+	}
+
+	return flux;
+}
+
+int Program::fordFulkerson() {
+	vector<Process*> augmentation;
+	int flux = 0;
+
+	while (true) {
+		augmentation = 0;//DFS(this->processes[this->source]);
+
+		if (augmentation.empty())
+			return flux;
+		else {
+			fp = maxFlux(augmentation);
+			flux += fp;
 		}
 	}
 }
@@ -113,13 +153,15 @@ Program parseData() {
 
 int main(int argc, char *argv[]) {
 	Program program = parseData();
-	for (Process* p : program.processes)
+	/*for (Process* p : program.processes)
 		printf("%d\n", p->id);
 	for (vector<int> vec : program.weights) {
 		for (int i : vec)
 			printf("%d\t", i);
 		printf("\n");
-	}
+	}*/
+	program.DFS(program.processes[program.source]);
+	//printf("%d\n", program.fordFulkerson());
 	program.clean();
 	return 0;
 }
