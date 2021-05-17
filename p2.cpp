@@ -87,6 +87,11 @@ Program parseData() {
 	ret.processes[z] = new Process(ret.source);
 	ret.processes[z+1] = new Process(ret.sink);
 
+	for (z = 0; z < n; z++) {
+		ret.processes[ret.source]->neighbours.push_back(ret.processes[z]);
+		ret.processes[z]->neighbours.push_back(ret.processes[ret.sink]);
+	}
+
 	int i, j, c;
 	for (z = 0; z < k; z++) {
 		scanf("%d %d %d", &i, &j, &c);
