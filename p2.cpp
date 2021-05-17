@@ -107,9 +107,8 @@ int main(int argc, char *argv[]) {
 	for (Process* p : program.processes)
 		printf("%d\n", p->id);
 	for (vector<int> vec : program.commsCost) {
-		for (int i : vec) {
+		for (int i : vec)
 			printf("%d\t", i);
-		}
 		printf("\n");
 	}
 	program.clean();
