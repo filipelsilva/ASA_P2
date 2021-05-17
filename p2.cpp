@@ -23,9 +23,7 @@ class Program {
 		int source = -1;
 		int sink = -1;
 		vector<Process*> processes;
-
 		vector<vector<int>> commsCost;
-		vector<vector<int>> flux;
 
 		Program(int nP) {
 			this->numProcesses = nP;
@@ -33,7 +31,6 @@ class Program {
 			this->sink = nP + 1;
 			this->processes = vector<Process*>(nP + 2);
 			this->commsCost = vector<vector<int>>(nP + 2, vector<int>(nP, 0));
-			this->flux = vector<vector<int>>(nP + 2, vector<int>(nP, 0));
 		}
 
 		int capacity(int id1, int id2);
@@ -93,7 +90,6 @@ Program parseData() {
 	for (z = 0; z < k; z++) {
 		scanf("%d %d %d", &i, &j, &c);
 		ret.commsCost[i-1][j-1] = c;
-		ret.commsCost[j-1][i-1] = c;
 
 		if (c != 0) {
 			ret.processes[i-1]->neighbours.push_back(ret.processes[j-1]);
