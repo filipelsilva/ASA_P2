@@ -75,19 +75,16 @@ Program parseData() {
 
 	Program ret = Program(n);
 
+	/* Adding Processor X and Y */
+	ret.processes[ret.source] = new Process(ret.source);
+	ret.processes[ret.sink] = new Process(ret.sink);
+
 	int px, py;
 	for (z = 0; z < n; z++) {
 		ret.processes[z] = new Process(z);
 		scanf("%d %d", &px, &py);
 		ret.commsCost[ret.source][z] = px;
 		ret.commsCost[ret.sink][z] = py;
-	}
-
-	/* Adding Processor X and Y */
-	ret.processes[z] = new Process(ret.source);
-	ret.processes[z+1] = new Process(ret.sink);
-
-	for (z = 0; z < n; z++) {
 		ret.processes[ret.source]->neighbours.push_back(ret.processes[z]);
 		ret.processes[z]->neighbours.push_back(ret.processes[ret.sink]);
 	}
