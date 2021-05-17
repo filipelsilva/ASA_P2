@@ -4,34 +4,39 @@
 
 using namespace std;
 
+#define SOURCE -1
+#define SINK -2
+
 enum colors { WHITE, GREY, BLACK };
 
-class Node {
+class Process {
 	public:
 		int id;
 		colors color = WHITE;
-		vector<Node*> neighbours = vector<Node*>();
+		vector<Process*> neighbours = vector<Process*>();
 
-		Node(int id) {
+		Process(int id) {
 			this->id = id;
 		}
 };
 
-class Graph {
+class Program {
 	public:
-		int flux = 0;
 		int numProcesses = -1;
-		vector<Node*> nodes;
+		vector<Process*> processes;
+
+		/* Costs of communication between/operation of processes */
 		vector<int> costsX;
 		vector<int> costsY;
 		vector<vector<int>> commsCost;
+
 		vector<int> fluxX;
 		vector<int> fluxY;
 		vector<vector<int>> flux;
 
-		Graph(int nP) {
-			this->numProcesses = nP;
-			this->nodes = vector<Node*>(nP);
+		Program(int nP) {
+			this->numProcesses = nP + 2;
+			this->processes = vector<Process*>(nP + 2);
 			this->costsX = vector<int>(nP, 0);
 			this->costsY = vector<int>(nP, 0);
 			this->commsCost = vector<vector<int>>(nP, vector<int>(nP, 0));
@@ -41,32 +46,32 @@ class Graph {
 		}
 
 		int capacity(int id1, int id2);
-		void DFS_Visit(Node* n);
+		void DFS_Visit(Process* n);
 		void clean();
 };
 
-int Graph::capacity(int id1, int id2) {
-	if (id1 == -1) /* -1 is the X node */
+int Program::capacity(int id1, int id2) {
+	if (id1 == SOURCE) /* -1 is the X node */
 		return costsX[id2];
-	else if (id2 == -1)
+	else if (id2 == SOURCE)
 		return costsX[id1];
-	else if (id1 == -2) /* -2 is the Y node */
+	else if (id1 == SINK) /* SINK is the Y node */
 		return costsY[id2];
-	else if (id2 == -2)
+	else if (id2 == SINK)
 		return costsY[id1];
 	else /* Otherwise, values between two processes */
 		return commsCost[id1][id2];
 }
 
-void Graph::DFS_Visit(Node* n) {
-	stack<Node*> toVisit;
+void Program::DFS_Visit(Process* n) {
+	stack<Process*> toVisit;
 	toVisit.push(n);
 
 	while (!toVisit.empty()) {
-		Node* node = toVisit.top();
+		Process* node = toVisit.top();
 		node->color = GREY;
 
-		for (Node* next : node->neighbours)
+		for (Process* next : node->neighbours)
 			if (next->color == WHITE)
 				toVisit.push(next);
 
@@ -77,24 +82,28 @@ void Graph::DFS_Visit(Node* n) {
 	}
 }
 
-void Graph::clean() {
-	for (Node* n : this->nodes)
+void Program::clean() {
+	for (Process* n : this->processes)
 		delete n;
 }
 
-Graph parseData() {
+Program parseData() {
 	int z, n, k;
 	scanf("%d %d", &n, &k);
 
-	Graph ret = Graph(n);
+	Program ret = Program(n);
 
 	int px, py;
 	for (z = 0; z < n; z++) {
-		ret.nodes[z] = new Node(z);
+		ret.processes[z] = new Process(z);
 		scanf("%d %d", &px, &py);
 		ret.costsX[z] = px;
 		ret.costsY[z] = py;
 	}
+
+	/* Adding Processor X and Y */
+	ret.processes[z] = new Process(SOURCE);
+	ret.processes[z+1] = new Process(SINK);
 
 	int i, j, c;
 	for (z = 0; z < k; z++) {
@@ -103,8 +112,8 @@ Graph parseData() {
 		ret.commsCost[j-1][i-1] = c;
 
 		if (c != 0) {
-			ret.nodes[i-1]->neighbours.push_back(ret.nodes[j-1]);
-			ret.nodes[j-1]->neighbours.push_back(ret.nodes[i-1]);
+			ret.processes[i-1]->neighbours.push_back(ret.processes[j-1]);
+			ret.processes[j-1]->neighbours.push_back(ret.processes[i-1]);
 		}
 	}
 
@@ -112,7 +121,8 @@ Graph parseData() {
 }
 
 int main(int argc, char *argv[]) {
-	Graph process = parseData();
-	process.clean();
+	Program program = parseData();
+	printf("%d\n", program.processes[program.numProcesses-1]->id);
+	program.clean();
 	return 0;
 }
