@@ -83,6 +83,10 @@ Program parseData() {
 		ret.commsCost[ret.sink][z] = py;
 	}
 
+	/* Adding Processor X and Y */
+	ret.processes[z] = new Process(ret.source);
+	ret.processes[z+1] = new Process(ret.sink);
+
 	int i, j, c;
 	for (z = 0; z < k; z++) {
 		scanf("%d %d %d", &i, &j, &c);
@@ -100,6 +104,8 @@ Program parseData() {
 
 int main(int argc, char *argv[]) {
 	Program program = parseData();
+	for (Process* p : program.processes)
+		printf("%d\n", p->id);
 	for (vector<int> vec : program.commsCost) {
 		for (int i : vec) {
 			printf("%d\t", i);
