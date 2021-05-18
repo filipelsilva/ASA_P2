@@ -4,6 +4,8 @@
 *.xlsx*
 vgcore*
 *.test
+res
+Entregas
 
 # Prerequisites
 *.d
