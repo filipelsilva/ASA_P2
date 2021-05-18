@@ -37,6 +37,7 @@ class Program {
 
 		int getWeights(int id1, int id2);
 		int getResidual(int id1, int id2);
+		vector<Process*> getPath(stack<Process*> visited);
 		vector<Process*> DFS();
 		int maxFlux(vector<Process*> path);
 		int fordFulkerson();
@@ -59,7 +60,7 @@ int Program::getResidual(int id1, int id2) {
 
 vector<Process*> Program::DFS() {
 	stack<Process*> toVisit;
-	vector<Process*> path;
+	vector<Process*> path, ret;
 	toVisit.push(this->processes[this->source]);
 
 	for (Process* p : this->processes)
@@ -68,10 +69,14 @@ vector<Process*> Program::DFS() {
 	while (!toVisit.empty()) {
 		Process* node = toVisit.top();
 		node->color = GREY;
+		path.push_back(node);
 
 		if (node == this->processes[this->sink]) {
-			path.push_back(node);
-			return path;
+			for (Process* p : path)
+				if (p->color == GREY)
+					ret.push_back(p);
+
+			return ret;
 		}
 
 		printf("\nVizinhos de %d: ", node->id);
@@ -88,8 +93,7 @@ vector<Process*> Program::DFS() {
 			printf("POP NO NODE %d\n", node->id);
 			node->color = BLACK;
 			toVisit.pop();
-		} else
-			path.push_back(node);
+		}
 	}
 
 	return vector<Process*>();
