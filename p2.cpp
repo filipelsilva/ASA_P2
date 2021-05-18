@@ -41,7 +41,7 @@ class Program {
 		int getResidual(int id1, int id2);
 		vector<Process*> DFS();
 		//int maxFlux(vector<Process*> path);
-		//int fordFulkerson();
+		int fordFulkerson();
 		void clean();
 };
 
@@ -93,6 +93,7 @@ vector<Process*> Program::DFS() {
 			toVisit.pop();
 		}
 	}
+	return vector<Process*>();
 }
 
 /*
@@ -120,8 +121,7 @@ int Program::fordFulkerson() {
 		if (augmentation.empty())
 			return flux;
 		else {
-			fp = maxFlux(augmentation);
-			flux += fp;
+			flux += 1;//maxFlux(augmentation);
 		}
 	}
 }
