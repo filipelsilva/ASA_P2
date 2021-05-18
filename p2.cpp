@@ -206,6 +206,6 @@ int main(int argc, char *argv[]) {
 	}
 	//program.DFS();
 	printf("%d\n", program.fordFulkerson());
-	//program.clean();
+	program.clean();
 	return 0;
 }
