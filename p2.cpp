@@ -91,18 +91,14 @@ vector<Process*> Program::DFS() {
 			return ret;
 		}
 
-		printf("\nVizinhos de %d: ", node->id);
 		for (Process* next : node->neighbours) {
 			if (next->color == WHITE && getResidual(node->id, next->id) != 0) {
 				toVisit.push(next);
-				printf("\t%d", next->id);
 				next->color = RED;
 			}
 		}
-		printf("\n");
 
 		if (toVisit.top() == node) {
-			printf("POP NO NODE %d\n", node->id);
 			node->color = BLACK;
 			toVisit.pop();
 		}
@@ -122,21 +118,8 @@ int Program::maxFlux(vector<Process*> path) {
 			flux = tmp;
 	}
 
-	printf("\nCaminho: ");
-	for (Process* p : path)
-		printf("%d\t", p->id);
-	printf("\nFlux: %d\n", flux);
-
 	for (size_t i = 1; i < path.size(); i++) {
 		this->setResidual(path[i-1]->id, path[i]->id, -flux);
-		//printf("%d to %d: now is %d from %d\n", path[i-1]->id, path[i]->id, this->residual[path[i]->id][path[i-1]->id], this->residual[path[i]->id][path[i-1]->id] + flux);
-	}
-
-	printf("\n");
-	for (vector<int> vec : this->residual) {
-		for (int i : vec)
-			printf("%d\t", i);
-		printf("\n");
 	}
 
 	return flux;
@@ -150,12 +133,10 @@ int Program::fordFulkerson() {
 		augmentation = DFS();
 
 		if (augmentation.empty()) {
-			printf("Acabou\n");
 			return flux;
 		}
 		else {
 			flux += maxFlux(augmentation);
-			printf("%d\n", flux);
 		}
 	}
 }
@@ -208,13 +189,13 @@ int main(int argc, char *argv[]) {
 		for (Process* pp : p->neighbours)
 			printf("%d\t", pp->id + 1);
 		printf("\n");
-	}*/
+	}
 	printf("Initial\n");
 	for (vector<int> vec : program.residual) {
 		for (int i : vec)
 			printf("%d\t", i);
 		printf("\n");
-	}
+	}*/
 	//program.DFS();
 	printf("%d\n", program.fordFulkerson());
 	program.clean();
