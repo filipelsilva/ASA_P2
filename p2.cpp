@@ -81,6 +81,7 @@ void Program::DFS() {
 	}
 }
 
+/*
 int Program::maxFlux(vector<Process*> path) {
 	int flux = getResidual(path[1]->id, path[0]->id);
 	int tmp = 0;
@@ -110,6 +111,7 @@ int Program::fordFulkerson() {
 		}
 	}
 }
+*/
 
 void Program::clean() {
 	for (Process* n : this->processes)
@@ -160,7 +162,7 @@ int main(int argc, char *argv[]) {
 			printf("%d\t", i);
 		printf("\n");
 	}*/
-	program.DFS(program.processes[program.source]);
+	program.DFS();
 	//printf("%d\n", program.fordFulkerson());
 	program.clean();
 	return 0;
