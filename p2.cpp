@@ -60,11 +60,11 @@ int Program::getResidual(int id1, int id2) {
 }
 
 void Program::setResidual(int id1, int id2, int delta) {
-	if (id2 == this->source || id2 == this->sink) {
+	if (id2 == this->source || id2 == this->sink)
 		residual[id2][id1] += delta;
-	} else if (id1 == this->source || id1 == this->sink) {
+	else if (id1 == this->source || id1 == this->sink)
 		residual[id1][id2] += delta;
-	} else {
+	else {
 		residual[id1][id2] += delta;
 		residual[id2][id1] += delta;
 	}
@@ -118,9 +118,8 @@ int Program::maxFlux(vector<Process*> path) {
 			flux = tmp;
 	}
 
-	for (size_t i = 1; i < path.size(); i++) {
+	for (size_t i = 1; i < path.size(); i++)
 		this->setResidual(path[i-1]->id, path[i]->id, -flux);
-	}
 
 	return flux;
 }
@@ -132,12 +131,10 @@ int Program::fordFulkerson() {
 	while (true) {
 		augmentation = DFS();
 
-		if (augmentation.empty()) {
+		if (augmentation.empty())
 			return flux;
-		}
-		else {
+		else
 			flux += maxFlux(augmentation);
-		}
 	}
 }
 
@@ -184,19 +181,6 @@ Program parseData() {
 
 int main(int argc, char *argv[]) {
 	Program program = parseData();
-	/*for (Process* p : program.processes) {
-		printf("Vizinhos de %d\n", p->id + 1);
-		for (Process* pp : p->neighbours)
-			printf("%d\t", pp->id + 1);
-		printf("\n");
-	}
-	printf("Initial\n");
-	for (vector<int> vec : program.residual) {
-		for (int i : vec)
-			printf("%d\t", i);
-		printf("\n");
-	}*/
-	//program.DFS();
 	printf("%d\n", program.fordFulkerson());
 	program.clean();
 	return 0;
