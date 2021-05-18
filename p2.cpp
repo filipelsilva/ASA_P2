@@ -62,11 +62,12 @@ int Program::getResidual(int id1, int id2) {
 void Program::setResidual(int id1, int id2, int delta) {
 	if (id2 == this->source || id2 == this->sink) {
 		residual[id2][id1] += delta;
-		return;
+	} else if (id1 == this->source || id1 == this->sink) {
+		residual[id1][id2] += delta;
+	} else {
+		residual[id1][id2] += delta;
+		residual[id2][id1] += delta;
 	}
-
-	residual[id1][id2] += delta;
-	residual[id2][id1] += delta;
 }
 
 vector<Process*> Program::DFS() {
