@@ -23,7 +23,7 @@ class Program {
 		int source = -1;
 		int sink = -1;
 		vector<Process*> processes;
-		vector<vector<int>> weights;
+		vector<vector<int>> weight;
 		vector<vector<int>> residual;
 
 		Program(int nP) {
@@ -31,12 +31,13 @@ class Program {
 			this->source = nP;
 			this->sink = nP + 1;
 			this->processes = vector<Process*>(nP + 2);
-			this->weights = vector<vector<int>>(nP + 2, vector<int>(nP, 0));
+			this->weight = vector<vector<int>>(nP + 2, vector<int>(nP, 0));
 			this->residual = vector<vector<int>>(nP + 2, vector<int>(nP, 0));
 		}
 
-		int getWeights(int id1, int id2);
+		int getWeight(int id1, int id2);
 		int getResidual(int id1, int id2);
+		void setResidual(int id1, int id2, int delta);
 		vector<Process*> getPath(stack<Process*> visited);
 		vector<Process*> DFS();
 		int maxFlux(vector<Process*> path);
@@ -44,11 +45,11 @@ class Program {
 		void clean();
 };
 
-int Program::getWeights(int id1, int id2) {
+int Program::getWeight(int id1, int id2) {
 	if (id2 == this->source || id2 == this->sink)
-		return weights[id2][id1];
+		return weight[id2][id1];
 
-	return weights[id1][id2];
+	return weight[id1][id2];
 }
 
 int Program::getResidual(int id1, int id2) {
@@ -56,6 +57,16 @@ int Program::getResidual(int id1, int id2) {
 		return residual[id2][id1];
 
 	return residual[id1][id2];
+}
+
+void Program::setResidual(int id1, int id2, int delta) {
+	if (id2 == this->source || id2 == this->sink) {
+		residual[id2][id1] += delta;
+		return;
+	}
+
+	residual[id1][id2] += delta;
+	residual[id2][id1] += delta;
 }
 
 vector<Process*> Program::DFS() {
@@ -116,8 +127,7 @@ int Program::maxFlux(vector<Process*> path) {
 	printf("\nFlux: %d\n", flux);
 
 	for (size_t i = 1; i < path.size(); i++) {
-		this->residual[path[i-1]->id][path[i]->id] -= flux;
-		this->residual[path[i]->id][path[i-1]->id] -= flux;
+		this->setResidual(path[i-1]->id, path[i]->id, -flux);
 		//printf("%d to %d: now is %d from %d\n", path[i-1]->id, path[i]->id, this->residual[path[i]->id][path[i-1]->id], this->residual[path[i]->id][path[i-1]->id] + flux);
 	}
 
@@ -168,8 +178,8 @@ Program parseData() {
 	for (z = 0; z < n; z++) {
 		ret.processes[z] = new Process(z);
 		scanf("%d %d", &px, &py);
-		ret.weights[ret.source][z] = px;
-		ret.weights[ret.sink][z] = py;
+		ret.weight[ret.source][z] = px;
+		ret.weight[ret.sink][z] = py;
 		ret.residual[ret.source][z] = px;
 		ret.residual[ret.sink][z] = py;
 		ret.processes[ret.source]->neighbours.push_back(ret.processes[z]);
@@ -179,8 +189,8 @@ Program parseData() {
 	int i, j, c;
 	for (z = 0; z < k; z++) {
 		scanf("%d %d %d", &i, &j, &c);
-		ret.weights[i-1][j-1] = c;
-		ret.weights[j-1][i-1] = c;
+		ret.weight[i-1][j-1] = c;
+		ret.weight[j-1][i-1] = c;
 		ret.residual[i-1][j-1] = c;
 		ret.residual[j-1][i-1] = c;
 		ret.processes[i-1]->neighbours.push_back(ret.processes[j-1]);
