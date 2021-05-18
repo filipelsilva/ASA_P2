@@ -67,10 +67,12 @@ vector<Process*> Program::DFS() {
 
 	while (!toVisit.empty()) {
 		Process* node = toVisit.top();
-		path.push_back(node);
+		node->color = GREY;
 
-		if (node == this->processes[this->sink])
+		if (node == this->processes[this->sink]) {
+			path.push_back(node);
 			return path;
+		}
 
 		printf("\nVizinhos de %d: ", node->id);
 		for (Process* next : node->neighbours) {
@@ -86,7 +88,8 @@ vector<Process*> Program::DFS() {
 			printf("POP NO NODE %d\n", node->id);
 			node->color = BLACK;
 			toVisit.pop();
-		}
+		} else
+			path.push_back(node);
 	}
 
 	return vector<Process*>();
