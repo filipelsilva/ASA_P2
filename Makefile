@@ -1,6 +1,6 @@
 .PHONY: all gen clean debug test
 
-all: p2.cpp gen2procs.cpp
+all: p2.cpp
 	g++ -std=c++11 -O3 -Wall p2.cpp -lm -o p2.out
 
 gen: gen2procs.cpp
