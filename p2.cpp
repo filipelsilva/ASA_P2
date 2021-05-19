@@ -23,7 +23,6 @@ class Program {
 		int source = -1;
 		int sink = -1;
 		vector<Process*> processes;
-		vector<vector<int>> weight;
 		vector<vector<int>> residual;
 
 		Program(int nP) {
@@ -31,11 +30,9 @@ class Program {
 			this->source = nP;
 			this->sink = nP + 1;
 			this->processes = vector<Process*>(nP + 2);
-			this->weight = vector<vector<int>>(nP + 2, vector<int>(nP, 0));
 			this->residual = vector<vector<int>>(nP + 2, vector<int>(nP, 0));
 		}
 
-		int getWeight(int id1, int id2);
 		int getResidual(int id1, int id2);
 		void setResidual(int id1, int id2, int delta);
 		vector<Process*> getPath(stack<Process*> visited);
@@ -44,13 +41,6 @@ class Program {
 		int fordFulkerson();
 		void clean();
 };
-
-int Program::getWeight(int id1, int id2) {
-	if (id2 == this->source || id2 == this->sink)
-		return weight[id2][id1];
-
-	return weight[id1][id2];
-}
 
 int Program::getResidual(int id1, int id2) {
 	if (id2 == this->source || id2 == this->sink)
@@ -157,8 +147,6 @@ Program parseData() {
 	for (z = 0; z < n; z++) {
 		ret.processes[z] = new Process(z);
 		scanf("%d %d", &px, &py);
-		ret.weight[ret.source][z] = px;
-		ret.weight[ret.sink][z] = py;
 		ret.residual[ret.source][z] = px;
 		ret.residual[ret.sink][z] = py;
 		ret.processes[ret.source]->neighbours.push_back(ret.processes[z]);
@@ -168,8 +156,6 @@ Program parseData() {
 	int i, j, c;
 	for (z = 0; z < k; z++) {
 		scanf("%d %d %d", &i, &j, &c);
-		ret.weight[i-1][j-1] = c;
-		ret.weight[j-1][i-1] = c;
 		ret.residual[i-1][j-1] = c;
 		ret.residual[j-1][i-1] = c;
 		ret.processes[i-1]->neighbours.push_back(ret.processes[j-1]);
